@@ -17,6 +17,11 @@ const attendanceSchema = mongoose.Schema({
         type: String,
         require: true,
     },
+    facultyData: {
+        type: mongoose.Types.ObjectId,
+        ref: "faculty"
+        // require: true
+    },
 });
 
 module.exports = mongoose.model("attendance", attendanceSchema);

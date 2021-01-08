@@ -4,20 +4,29 @@ var router = express.Router();
 var config = require('../config')
 const e = require('express');
 const attendanceSchema = require('../model/attendanceSchema');
+const facultySignupSchema = require('../model/facultySignupSchema');
 
 router.post("/attendance" , async function(req,res,next){
-    const {date,time,lat,long } = req.body;
+    const {date,time,lat,long,facultyId } = req.body;
     try {
+        // let existData = await facultySignupSchema.find({_id : facultyId});
+        // console.log(existData);
+        
         var record = await new attendanceSchema({
+            facultyData : facultyId,
             date: date,
             time: time,
             lat: lat,
-            long: long
+            long: long,
         });
-        record.save();
-        console.log(record);
+        await record.save();
+        console.log(record._id);
+        let attendanceDataIs = await attendanceSchema.find({ _id: record._id })
+                                                     .populate({
+                                                         path: "facultyData"
+                                                     })
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: record , Message: "Attendance Marked Successfully" });
+            res.status(200).json({ IsSuccess: true , Data: attendanceDataIs , Message: "Attendance Marked Successfully" });
         }else{
             res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Please Try Again" });
         }
