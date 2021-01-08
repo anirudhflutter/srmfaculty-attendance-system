@@ -52,4 +52,22 @@ router.post("/login" , async function(req,res,next){
     }
 });
 
+router.post("/getalldata" , async function(req,res,next){
+    try {
+        
+        let records = await facultySignupSchema.find();
+
+        console.log(records);
+
+        if(records.length > 0){
+            res.status(200).json({ IsSuccess: true , Data: records , Message: "Data Found" });
+        }
+        else{   
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No Data Found" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
 module.exports = router;
